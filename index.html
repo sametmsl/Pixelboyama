@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pixel Boyama - r/place</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 10px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #colorPalette {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 300px;
+      gap: 5px;
+      margin-bottom: 15px;
+      justify-content: center;
+    }
+
+    .color {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #999;
+      cursor: pointer;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(50, 10px);
+      grid-template-rows: repeat(50, 10px);
+      gap: 1px;
+    }
+
+    .cell {
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+
+    #controls {
+      margin-top: 10px;
+    }
+
+    button {
+      margin: 0 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Pixel Boyama - r/place</h1>
+  <div id="colorPalette"></div>
+  <div id="grid"></div>
+  <div id="controls">
+    <button onclick="undo()">↩️ Geri Al</button>
+    <button onclick="setColor('#FFFFFF')">🧽 Silgi</button>
+  </div>
+
+  <script>
+    const colors = [
+      "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF", "#FFFF00",
+      "#FF00FF", "#00FFFF", "#C0C0C0", "#808080", "#800000", "#808000",
+      "#008000", "#800080", "#008080", "#000080", "#FFA500", "#A52A2A",
+      "#8B4513", "#2E8B57", "#4B0082", "#DA70D6", "#20B2AA", "#FF69B4"
+    ];
+
+    const colorPalette = document.getElementById("colorPalette");
+    let selectedColor = colors[0];
+    let history = [];
+
+    colors.forEach(color => {
+      const div = document.createElement("div");
+      div.className = "color";
+      div.style.backgroundColor = color;
+      div.onclick = () => setColor(color);
+      colorPalette.appendChild(div);
+    });
+
+    function setColor(color) {
+      selectedColor = color;
+    }
+
+    const grid = document.getElementById("grid");
+
+    for (let i = 0; i < 2500; i++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.addEventListener("click", () => {
+        history.push({ cell: cell, prevColor: cell.style.backgroundColor });
+        cell.style.backgroundColor = selectedColor;
+      });
+      grid.appendChild(cell);
+    }
+
+    function undo() {
+      const last = history.pop();
+      if (last) {
+        last.cell.style.backgroundColor = last.prevColor;
+      }
+    }
+  </script>
+</body>
+  </html>
+  
